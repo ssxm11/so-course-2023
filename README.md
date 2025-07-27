@@ -86,10 +86,11 @@ docker-compose down -v
 ```
 
 #### autor
-
+```bash
 Estudiante: Esteban Samuel Cordoba Narvaez
 codigo: 202370976 - 3743
 correo: esteban.cordoba@correounivalle.edu.co
 github user: ssxm11
+```
 
 ---
