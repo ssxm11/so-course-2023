@@ -1,26 +1,24 @@
 from flask import Flask, request, jsonify, send_from_directory
 import threading
-from worker import crear_archivo
 import os
+from worker import crear_archivo
+
 app = Flask(__name__)
 
-# Carpeta pública (compartida entre contenedores)
-PUBLIC_FOLDER = '/sync_files/public'
-
-# Carpeta privada (solo accesible localmente)
-PRIVATE_FOLDER = '/sync_files/private'
-
+BASE_PATH = "/sync_files"
+PUBLIC_FOLDER = os.path.join(BASE_PATH, "public")
+PRIVATE_FOLDER = os.path.join(BASE_PATH, "private")
 
 # Iniciar hilo para crear archivos
 threading.Thread(target=crear_archivo, daemon=True).start()
 
-@app.route('/storage/<uid>')
-def storage(uid):
-    return os.listdir('/sync_files')
+@app.route('/')
+def hello():
+    return {"message": "Hola, Mundo!!!"}
 
-@app.route('/public/')
-def public():
-    return os.listdir('/sync_files/public')
+@app.route('/despedirse')
+def bye():
+    return {"message": "Adiós, Mundo!!!"}
 
 @app.route('/public/')
 def listar_publicos():
@@ -30,13 +28,14 @@ def listar_publicos():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 @app.route('/storage/<uid>')
 def listar_contenedor(uid):
-    # Esto solo devuelve los archivos de ESTE contenedor
+    carpeta_privada = os.path.join(PRIVATE_FOLDER, uid)
+    if not os.path.exists(carpeta_privada):
+        return jsonify({"error": "Contenedor no encontrado"}), 404
     try:
-        privados = os.listdir(PRIVATE_FOLDER)
-        return jsonify({"contenedor": uid, "archivos_privados": privados})
+        archivos = os.listdir(carpeta_privada)
+        return jsonify({"contenedor": uid, "archivos_privados": archivos})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -53,20 +52,11 @@ def upload(uid, filename):
         return jsonify({"error": "No se encontró el archivo en la solicitud"}), 400
     archivo = request.files['file']
     path_destino = os.path.join(PUBLIC_FOLDER, filename)
-    archivo.save(path_destino)
-    return jsonify({"mensaje": f"Archivo {filename} subido al contenedor {uid}"}), 200
+    try:
+        archivo.save(path_destino)
+        return jsonify({"mensaje": f"Archivo {filename} subido por el contenedor {uid}"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-@app.route('/')
-def hello_world():
-  return {
-    'message': 'hola, Mundo!!!'
-  }
-
-@app.route('/despedirse')
-def bye_world():
-  return {
-    'message': 'Adiós, mundo!!!'
-  }
-
-
-app.run()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)

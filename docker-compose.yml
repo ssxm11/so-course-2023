@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  contenedor1:
+    build: .
+    container_name: c1
+    volumes:
+      - sync_data:/sync_files
+    ports:
+      - "5001:5000"
+
+  contenedor2:
+    build: .
+    container_name: c2
+    volumes:
+      - sync_data:/sync_files
+    ports:
+      - "5002:5000"
+
+  contenedor3:
+    build: .
+    container_name: c3
+    volumes:
+      - sync_data:/sync_files
+    ports:
+      - "5003:5000"
+
+volumes:
+  sync_data:
