@@ -80,7 +80,16 @@ docker run -d --name nodo3 --network sync_net -p 5003:5000 synchrontainer
 docker-compose up --build
 ```
 
-# para apagar todo
+### para apagar todo
 ```bash
 docker-compose down -v
 ```
+
+#### autor
+
+Estudiante: Esteban Samuel Cordoba Narvaez
+codigo: 202370976 - 3743
+correo: esteban.cordoba@correounivalle.edu.co
+github user: ssxm11
+
+---
