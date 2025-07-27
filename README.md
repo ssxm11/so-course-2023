@@ -17,16 +17,19 @@ Desarrollar una red de contenedores Docker capaz de:
 ## Guía 
 
 ### Estructura del proyecto
+### Estructura del proyecto
 
+```bash
 /so-course-2023/
 ├── myapp/
-|    ├── app.py
-|    ├── requirements.txt
-|    ├── worker.py
-|    └── start.sh
+│   ├── app.py
+│   ├── requirements.txt
+│   ├── worker.py
+│   └── start.sh
 ├── Dockerfile
 ├── docker-compose.yml
 └── README.md
+```
 
 
 ---
